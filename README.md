@@ -2,9 +2,9 @@
 Simple scripts for visualizing page cache for a file
 
 # prerequisites
-* install spark (sparklines for your shell, https://zachholman.com/spark/)
-* install pcstat (Page Cache stat: get page cache stats for files, https://github.com/tobert/pcstat)
-* install jq (Command-line JSON processor, https://github.com/stedolan/jq)
+* install `spark` (sparklines for your shell, https://zachholman.com/spark/)
+* install `pcstat` (Page Cache stat: get page cache stats for files, https://github.com/tobert/pcstat)
+* install `jq` (Command-line JSON processor, https://github.com/stedolan/jq)
 
 # installation
 1. Copy the `pps.py` from this repo
