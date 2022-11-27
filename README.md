@@ -1,5 +1,5 @@
 # pcvis
-Simple scripts for visualizing page cache for a file
+Simple scripts for visualizing page cache of a given file
 
 # prerequisites
 * install `spark` (sparklines for your shell, https://zachholman.com/spark/)
