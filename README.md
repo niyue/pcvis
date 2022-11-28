@@ -4,6 +4,7 @@ Simple scripts for visualizing page cache of a given file
 # prerequisites
 * install `spark` (sparklines for your shell, https://zachholman.com/spark/)
 * install `pcstat` (Page Cache stat: get page cache stats for files, https://github.com/tobert/pcstat)
+  * it has both Linux and macOS binaries since v0.0.1
 * install `jq` (Command-line JSON processor, https://github.com/stedolan/jq)
 
 # installation
