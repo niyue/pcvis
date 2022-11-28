@@ -22,4 +22,14 @@ pcstat -json -pps /path/to/my_file | jq '.[0].status' | pps.py | spark
 
 <img width="1719" alt="image" src="https://user-images.githubusercontent.com/27754/204122521-c17c5b32-82ee-4326-8d15-b39192889eec.png">
 
+# notes
+Before running the above command for visualization, you need to clean page cache so that the above result is accurate
+
+```
+# for linux
+sync; echo 1 > /proc/sys/vm/drop_caches 
+# for macOS
+sudo purge
+```
+
 
