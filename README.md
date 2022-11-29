@@ -20,7 +20,8 @@ Visualize a given file's page cache status like below. In the visualized image, 
 pcstat -json -pps /path/to/my_file | pps.py | spark
 ```
 
-<img width="1719" alt="image" src="https://user-images.githubusercontent.com/27754/204122521-c17c5b32-82ee-4326-8d15-b39192889eec.png">
+<img width="1916" alt="image" src="https://user-images.githubusercontent.com/27754/204568345-ecf236d3-3151-4f3e-8c2b-cf30f9833091.png">
+
 
 # notes
 Before running the above command for visualization, you need to clean page cache so that the above result is accurate
