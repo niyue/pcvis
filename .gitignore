@@ -1,3 +1,4 @@
 dist
 pcvis/__pycache__
 tests/__pycache__
+.vscode
