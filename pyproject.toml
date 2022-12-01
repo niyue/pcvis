@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pcvis"
-version = "0.2.0"
+version = "0.3.0"
 description = "2022-12-01"
 authors = ["Yue Ni <niyue.com@gmail.com>"]
 readme = "README.md"

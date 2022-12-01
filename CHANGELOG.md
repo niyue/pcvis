@@ -1,3 +1,5 @@
+# 0.3.0 - 2022-12-01
+* Support launching `pcstat` automatically
 # 0.2.0 - 2022-12-01
 * Add python 3.6 support
 * Customizable output styles
