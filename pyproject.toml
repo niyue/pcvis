@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pcvis"
-version = "0.3.0"
-description = "2022-12-01"
+version = "0.4.0"
+description = "2022-12-10"
 authors = ["Yue Ni <niyue.com@gmail.com>"]
 readme = "README.md"
 
@@ -10,6 +10,9 @@ python = "^3.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2"
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.0"
 
 [build-system]
 requires = ["poetry-core"]
