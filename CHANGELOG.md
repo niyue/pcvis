@@ -1,3 +1,5 @@
+# 0.4.0 - 2022-12-10
+* Add a command to install pcstat
 # 0.3.0 - 2022-12-01
 * Support launching `pcstat` automatically
 # 0.2.0 - 2022-12-01
