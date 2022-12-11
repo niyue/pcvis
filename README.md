@@ -50,7 +50,16 @@ Via this visualization, you can easily spot that:
 * `-v` or `--version`: show version (only available if you install via `pip`)
 * `-h` or `--help`: show help message
 
+# examples
+1. Visualize all csv files' page cache
+```shell
+find . -iname "*.csv" | xargs pcvis -f
+```
 
+2. Install `pcstat` automatically into `/usr/local/bin`
+```shell
+pcvis --install-pcstat
+```
 
 # notes
 1. Before running the above command for visualization, you need to clean page cache so that the above result is accurate
