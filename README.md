@@ -38,7 +38,7 @@ Via this visualization, you can easily spot that:
 3. this file is accessed in a random access manner, and you may even vaguely check if the random access is a binary search, etc
 
 ## arguments
-* `-f` or `--file`: the path to the file you want to visualize its page cache status, e.g. `pcvis -f /path/to/my_file`. If you specify this argument, `pcvis` will launch `pcstat` automatically and visualize the result. If this argument is not specified, `pcvis` will read the output of `pcstat` from `stdin`, e.g. `pcstat -json -pps /path/to/my_file | pcvis`
+* `-f` or `--file`: the path to the file(s) you want to visualize its page cache status, e.g. `pcvis -f /path/to/foo_file /path/to/bar_file`. If you specify this argument, `pcvis` will launch `pcstat` automatically and visualize the result. If this argument is not specified, `pcvis` will read the output of `pcstat` from `stdin`, e.g. `pcstat -json -pps /path/to/my_file | pcvis`
 * `-s` or `--style`: there are over 20 different rendering styles to choose from, you can specify a custom style by passing an integer to this argument. The default style is `0`. Some sample styles are shown below:
 
   * e.g. `pcvis -s 24`
