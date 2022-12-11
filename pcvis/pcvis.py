@@ -175,7 +175,7 @@ def sizeof_fmt(num, suffix="B"):
     return f"{num:.1f}Yi{suffix}"
 
 
-def colorize(s: str, color: str = "green"):
+def colorize(s: str, color : str = "green"):
     if color == "green":
         return f"\033[32m{s}\033[0m"
     elif color == "red":
@@ -183,9 +183,23 @@ def colorize(s: str, color: str = "green"):
     elif color == "yellow":
         return f"\033[33m{s}\033[0m"
 
-
 def colorize_list(key_value_pairs):
     return " ".join([f"{key}={colorize(value)}" for key, value in key_value_pairs])
+
+
+def format_date_time(date_time: str):
+    # 2022-12-11T08:52:34.052282365+08:00
+    # find the location of the first +, and remove the last 3 characters from that location
+    # 2022-12-11T08:52:34.052282365
+    tz_offset = date_time.find("+")
+    date_time = date_time[:tz_offset - 3] + date_time[tz_offset:]
+    try:
+        import relative_time as rt
+        dt = rt.parse_datetime(date_time)
+        return rt.relative_time(dt)
+    except Exception as e:
+        print(f"[format_date_time] error={e}")
+        return date_time
 
 
 def main():
@@ -210,6 +224,7 @@ def main():
                 ("size", sizeof_fmt(file_status['size'])),
                 ("pages", file_status["pages"]),
                 ("percent", f"{file_status['percent']}%"),
+                ("mtime", format_date_time(file_status['mtime'])),
             ]
             colorized_attrs = colorize_list(formatted_attrs)
             colorized_file_name = colorize(file_status['filename'], "yellow")
