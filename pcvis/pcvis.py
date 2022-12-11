@@ -66,9 +66,10 @@ def _cli_parser():
     group.add_argument(
         "-f",
         "--file",
+        nargs="+",
         default=None,
         type=str,
-        help="the path to the file you want to visualize its page cache status, e.g. `pcvis -f /path/to/my_file`. If you specify this argument, `pcvis` will launch `pcstat` automatically and visualize the result. If this argument is not specified, `pcvis` will read the output of `pcstat` from `stdin`, e.g. `pcstat -json -pps /path/to/my_file | pcvis`",
+        help="the path to the file(s) you want to visualize its page cache status, e.g. `pcvis -f /path/to/foo_file /path/to/bar_file`. If you specify this argument, `pcvis` will launch `pcstat` automatically and visualize the result. If this argument is not specified, `pcvis` will read the output of `pcstat` from `stdin`, e.g. `pcstat -json -pps /path/to/my_file | pcvis`",
     )
 
     group.add_argument(
@@ -98,11 +99,13 @@ def read_pps():
 
 def parse_pps(pps_json, style=0):
     pps = json.loads(pps_json)
-    pps_status = pps[0]["status"]
-    out_icon, in_icon = BAR_STYLES[style]
-    pps_string = "".join(
-        [in_icon if page else out_icon for page in pps_status])
-    return pps_string
+    for file_status in pps:
+        pps_status = file_status["status"]
+        out_icon, in_icon = BAR_STYLES[style]
+        pps_string = "".join(
+            [in_icon if page else out_icon for page in pps_status])
+        file_status["vis"] = pps_string
+        yield file_status
 
 
 def parse_sys_args(sys_args):
@@ -111,16 +114,19 @@ def parse_sys_args(sys_args):
     return vars(args)
 
 
-def launch_pcstat(file):
+def launch_pcstat(file_set):
     import subprocess
-
-    cmd = ["pcstat", "-json", "-pps", file]
+    cmd = ["pcstat", "-json", "-pps"]
+    cmd.extend(file_set)
+    # print(f"[launching pcstat] cmd={cmd}")
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate()
     return stdout.decode("utf-8"), stderr.decode("utf-8")
 
 # download pcstat package from github url according to the system platform,
 # extract the binary from the package
+
+
 def _downlad_pcstat(download_dir):
     import platform
     import urllib.request
@@ -132,7 +138,8 @@ def _downlad_pcstat(download_dir):
     if system in ["Darwin", "Linux"] and arch in ["x86_64", "arm64"]:
         download_url = f"{download_url_base}/v{pcstat_version}/pcstat-{pcstat_version}-{system}-{arch}.tar.gz"
         # download pcstat package from download_url to temp folder
-        print(f"[downloading pcstat] url={download_url} download_dir={download_dir}")
+        print(
+            f"[downloading pcstat] url={download_url} download_dir={download_dir}")
         urllib.request.urlretrieve(
             download_url, f"{download_dir}/pcstat.tar.gz")
     else:
@@ -158,6 +165,29 @@ def install_pcstat_cmd(install_dir):
         print(f"[pcstat already installed] path={install_dir}/pcstat")
 
 
+def sizeof_fmt(num, suffix="B"):
+    for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
+        if abs(num) < 1024.0:
+            # if num is integer, return int, otherwise return float
+            num_str = f"{num}" if num == int(num) else f"{num:3.1f}"
+            return f"{num_str}{unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f}Yi{suffix}"
+
+
+def colorize(s: str, color: str = "green"):
+    if color == "green":
+        return f"\033[32m{s}\033[0m"
+    elif color == "red":
+        return f"\033[31m{s}\033[0m"
+    elif color == "yellow":
+        return f"\033[33m{s}\033[0m"
+
+
+def colorize_list(key_value_pairs):
+    return " ".join([f"{key}={colorize(value)}" for key, value in key_value_pairs])
+
+
 def main():
     args = parse_sys_args(sys.argv[1:])
     style = args["style"]
@@ -175,8 +205,16 @@ def main():
     else:
         pps_json = read_pps()
     try:
-        pps_string = parse_pps(pps_json, style % len(BAR_STYLES))
-        print(pps_string)
+        for file_status in parse_pps(pps_json, style % len(BAR_STYLES)):
+            formatted_attrs = [
+                ("size", sizeof_fmt(file_status['size'])),
+                ("pages", file_status["pages"]),
+                ("percent", f"{file_status['percent']}%"),
+            ]
+            colorized_attrs = colorize_list(formatted_attrs)
+            colorized_file_name = colorize(file_status['filename'], "yellow")
+            print(f"{colorized_file_name} {colorized_attrs}")
+            print(file_status["vis"])
     except Exception as e:
         print(
             f"[failed to parse per page status from pcstat] pps_json='{pps_json}' error='{str(e)}'"
