@@ -4,6 +4,8 @@ import sys
 import json
 import argparse
 import os
+import shlex
+from contextlib import redirect_stdout
 
 
 BAR_STYLES = [
@@ -116,6 +118,8 @@ def parse_sys_args(sys_args):
 
 def launch_pcstat(file_set):
     import subprocess
+    # quote each value in file_set
+    file_set = [shlex.quote(f) for f in file_set]
     cmd = ["pcstat", "-json", "-pps"]
     cmd.extend(file_set)
     # print(f"[launching pcstat] cmd={cmd}")
@@ -123,8 +127,7 @@ def launch_pcstat(file_set):
     stdout, stderr = p.communicate()
     return stdout.decode("utf-8"), stderr.decode("utf-8")
 
-# download pcstat package from github url according to the system platform,
-# extract the binary from the package
+# download pcstat package from github url according to the system platform
 
 
 def _downlad_pcstat(download_dir):
@@ -147,6 +150,7 @@ def _downlad_pcstat(download_dir):
             "Unsupported platform, only support x86_64 and arm64 macOS and Linux")
 
 
+# download, extract the binary from the package, and install it
 def install_pcstat_cmd(install_dir):
     if not os.path.exists(f"{install_dir}/pcstat"):
         import tempfile
@@ -175,7 +179,7 @@ def sizeof_fmt(num, suffix="B"):
     return f"{num:.1f}Yi{suffix}"
 
 
-def colorize(s: str, color : str = "green"):
+def colorize(s: str, color: str = "green"):
     if color == "green":
         return f"\033[32m{s}\033[0m"
     elif color == "red":
@@ -183,58 +187,44 @@ def colorize(s: str, color : str = "green"):
     elif color == "yellow":
         return f"\033[33m{s}\033[0m"
 
+
 def colorize_list(key_value_pairs):
     return " ".join([f"{key}={colorize(value)}" for key, value in key_value_pairs])
 
 
-def format_date_time(date_time: str):
-    # 2022-12-11T08:52:34.052282365+08:00
-    # find the location of the first +, and remove the last 3 characters from that location
-    # 2022-12-11T08:52:34.052282365
-    tz_offset = date_time.find("+")
-    date_time = date_time[:tz_offset - 3] + date_time[tz_offset:]
-    try:
-        import relative_time as rt
-        dt = rt.parse_datetime(date_time)
-        return rt.relative_time(dt)
-    except Exception as e:
-        print(f"[format_date_time] error={e}")
-        return date_time
-
-
-def main():
-    args = parse_sys_args(sys.argv[1:])
-    style = args["style"]
-    file = args["file"]
-    install_pcstat = args["install_pcstat"]
-    if file:
-        pps_json, stderr = launch_pcstat(file)
-        if stderr:
-            print(stderr)
+def main(args, out = sys.stdout):
+    with redirect_stdout(out):
+        style = args.get("style", 0)
+        file = args.get("file", None)
+        install_pcstat = args.get("install_pcstat", False)
+        if file:
+            pps_json, stderr = launch_pcstat(file)
+            if stderr:
+                print(stderr)
+                return
+        elif install_pcstat:
+            install_dir = os.environ.get("PCVIS_PCSTAT_PATH", "/usr/local/bin")
+            install_pcstat_cmd(install_dir)
             return
-    elif install_pcstat:
-        install_dir = os.environ.get("PCVIS_PCSTAT_PATH", "/usr/local/bin")
-        install_pcstat_cmd(install_dir)
-        return
-    else:
-        pps_json = read_pps()
-    try:
-        for file_status in parse_pps(pps_json, style % len(BAR_STYLES)):
-            formatted_attrs = [
-                ("size", sizeof_fmt(file_status['size'])),
-                ("pages", file_status["pages"]),
-                ("percent", f"{file_status['percent']}%"),
-                ("mtime", format_date_time(file_status['mtime'])),
-            ]
-            colorized_attrs = colorize_list(formatted_attrs)
-            colorized_file_name = colorize(file_status['filename'], "yellow")
-            print(f"{colorized_file_name} {colorized_attrs}")
-            print(file_status["vis"])
-    except Exception as e:
-        print(
-            f"[failed to parse per page status from pcstat] pps_json='{pps_json}' error='{str(e)}'"
-        )
+        else:
+            pps_json = read_pps()
+        try:
+            for file_status in parse_pps(pps_json, style % len(BAR_STYLES)):
+                formatted_attrs = [
+                    ("size", sizeof_fmt(file_status['size'])),
+                    ("pages", file_status["pages"]),
+                    ("percent", f"{file_status['percent']}%"),
+                ]
+                colorized_attrs = colorize_list(formatted_attrs)
+                colorized_file_name = colorize(file_status['filename'], "yellow")
+                print(f"{colorized_file_name} {colorized_attrs}")
+                print(file_status["vis"])
+        except Exception as e:
+            print(
+                f"[failed to parse per page status from pcstat] pps_json='{pps_json}' error='{str(e)}'"
+            )
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_sys_args(sys.argv[1:])
+    main(args)
