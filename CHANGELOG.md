@@ -1,3 +1,5 @@
+# 0.5.0 - 2022-12-11
+* Support visualizing mulitple files at a time
 # 0.4.0 - 2022-12-10
 * Add a command to install pcstat
 # 0.3.0 - 2022-12-01

@@ -26,7 +26,14 @@ def test_given_file():
     args = parse_sys_args(["--style", "1", "--file", "/foo"])
     assert_dict_equal(
         args,
-        {"style": 1, "file": "/foo", "install_pcstat": False},
+        {"style": 1, "file": ["/foo"], "install_pcstat": False},
+    )
+
+def test_specifying_multiple_files():
+    args = parse_sys_args(["--style", "1", "--file", "/foo", "/bar"])
+    assert_dict_equal(
+        args,
+        {"style": 1, "file": ["/foo", "/bar"], "install_pcstat": False},
     )
 
 

@@ -67,4 +67,15 @@ sudo purge
 export LC_ALL="en_US.utf8"
 ```
 
+# development
+## run tests
+```
+poetry run pytest
+```
+
+## install dev revision locally
+```
+make setup
+```
+
 
