@@ -1,5 +1,5 @@
 # pcvis
-A command line tool for visualizing page cache of a given file
+A command line tool for visualizing page cache status of given files
 
 # prerequisites
 * install `pcstat` (Page Cache stat: get page cache stats for files, https://github.com/tobert/pcstat)
