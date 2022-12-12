@@ -62,11 +62,12 @@ pcvis --install-pcstat
 ```
 
 # notes
-1. Before running the above command for visualization, you need to clean page cache so that the above result is accurate
+1. If you are doing database kernel development and would like to verify IO access pattern for your files, before running the above command for visualization, you may need to clean page cache up front so that such result clearly show the IO access pattern each time
 
 ```
 # for linux
 sync; echo 1 > /proc/sys/vm/drop_caches 
+
 # for macOS
 sudo purge
 ```
