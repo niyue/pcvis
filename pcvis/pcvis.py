@@ -77,6 +77,13 @@ def _cli_parser():
         help="Install pcstat to /usr/local/bin. You can specify `PCVIS_PCSTAT_PATH` env var to alter the default install dir. e.g. `PCVIS_PCSTAT_PATH=/usr/bin pcvis -i`",
     )
 
+    group.add_argument(
+        "-l",
+        "--list",
+        action='store_true',
+        help="List all the styles supported",
+    )
+
     version, summary = get_meta()
 
     parser.add_argument(
@@ -188,11 +195,22 @@ def colorize_list(key_value_pairs):
     return " ".join([f"{key}={colorize(value)}" for key, value in key_value_pairs])
 
 
-def main(args, out = sys.stdout):
+def list_styles():
+    print(f"run `{colorize('pcvis --style <id>')}` to use the style")
+    print("id: example")
+    # a sample pps json for demonstration
+    sample_pps = '[{"status": [true, false, false, false, true, false, false, false, true, true]}]'
+    for i, _ in enumerate(BAR_STYLES):
+        sample_status = list(parse_pps(sample_pps, i))[0]
+        print(f"{str(i).rjust(2, ' ')}: {sample_status['vis']}")
+
+
+def main(args, out=sys.stdout):
     with redirect_stdout(out):
         style = args.get("style", 0)
         file = args.get("file", None)
         install_pcstat = args.get("install_pcstat", False)
+        list_existing_styles = args.get("list", False)
         if file:
             pps_json, stderr = launch_pcstat(file)
             if stderr:
@@ -201,6 +219,9 @@ def main(args, out = sys.stdout):
         elif install_pcstat:
             install_dir = os.environ.get("PCVIS_PCSTAT_PATH", "/usr/local/bin")
             install_pcstat_cmd(install_dir)
+            return
+        elif list_existing_styles:
+            list_styles()
             return
         else:
             pps_json = read_pps()
@@ -212,13 +233,15 @@ def main(args, out = sys.stdout):
                     ("percent", f"{file_status['percent']}%"),
                 ]
                 colorized_attrs = colorize_list(formatted_attrs)
-                colorized_file_name = colorize(file_status['filename'], "yellow")
+                colorized_file_name = colorize(
+                    file_status['filename'], "yellow")
                 print(f"{colorized_file_name} {colorized_attrs}")
                 print(file_status["vis"])
         except Exception as e:
             print(
                 f"[failed to parse per page status from pcstat] pps_json='{pps_json}' error='{str(e)}'"
             )
+
 
 def cli():
     args = parse_sys_args(sys.argv[1:])

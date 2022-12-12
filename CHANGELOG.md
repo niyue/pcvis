@@ -1,3 +1,6 @@
+# 0.6.0 - 2022-12-12
+* Support listing all sytles available
+* Change the order of styles
 # 0.5.1 - 2022-12-12
 * Fix the poetry startup script
 # 0.5.0 - 2022-12-11
