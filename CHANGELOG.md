@@ -1,3 +1,5 @@
+# 0.5.1 - 2022-12-12
+* Fix the poetry startup script
 # 0.5.0 - 2022-12-11
 * Support visualizing mulitple files at a time
 # 0.4.0 - 2022-12-10
