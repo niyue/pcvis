@@ -224,7 +224,10 @@ def main(args, out = sys.stdout):
                 f"[failed to parse per page status from pcstat] pps_json='{pps_json}' error='{str(e)}'"
             )
 
-
-if __name__ == "__main__":
+def cli():
     args = parse_sys_args(sys.argv[1:])
     main(args)
+
+
+if __name__ == "__main__":
+    cli()
