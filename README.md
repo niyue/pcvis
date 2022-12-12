@@ -41,12 +41,12 @@ Via this visualization, you can easily spot that:
 * `-f` or `--file`: the path to the file(s) you want to visualize its page cache status, e.g. `pcvis -f /path/to/foo_file /path/to/bar_file`. If you specify this argument, `pcvis` will launch `pcstat` automatically and visualize the result. If this argument is not specified, `pcvis` will read the output of `pcstat` from `stdin`, e.g. `pcstat -json -pps /path/to/my_file | pcvis`
 * `-s` or `--style`: there are over 20 different rendering styles to choose from, you can specify a custom style by passing an integer to this argument. The default style is `0`. Some sample styles are shown below:
 
-  * e.g. `pcvis -s 24`
+  * e.g. `pcvis -s 3`
 🌕🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌕🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌕🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌕🌑🌑🌑🌑🌑🌑🌑🌑🌑🌕🌑🌑🌑🌑🌕🌑🌕🌑🌕🌕🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌑🌕
-  * e.g. `pcvis -s 17`
+  * e.g. `pcvis -s 4`
 💚🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍💚🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍💚🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍💚🤍🤍🤍🤍🤍🤍🤍🤍🤍💚🤍🤍🤍🤍💚🤍💚🤍💚💚🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍🤍💚
 * `-i` or `--install-pcstat`: install pcstat to your system. By default, pcstat is installed into /usr/local/bin. You can specify `PCVIS_PCSTAT_PATH` env var to alter the default install dir. e.g. `PCVIS_PCSTAT_PATH=/usr/bin pcvis -i`
-
+* `-l` or `--list`: list all styles available
 * `-v` or `--version`: show version (only available if you install via `pip`)
 * `-h` or `--help`: show help message
 
@@ -59,6 +59,11 @@ find . -iname "*.csv" | xargs pcvis -f
 2. Install `pcstat` automatically into `/usr/local/bin`
 ```shell
 pcvis --install-pcstat
+```
+
+3. List all available styles
+```shell
+pcvis --list
 ```
 
 # notes
@@ -76,6 +81,9 @@ sudo purge
 ```
 export LC_ALL="en_US.utf8"
 ```
+Otherwise, errors like `'ascii' codec can't encode character u'\xa0' in position 20: ordinal not in range(128)` may be reported.
+
+Alternatively, you may try using some ASCII only style like `pcvis -s 1 -f /path/to/file` to avoid such issue.
 
 # development
 ## run tests

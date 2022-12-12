@@ -6,7 +6,7 @@ def test_parse_pps():
     file_statuses = parse_pps(json.dumps([{"status": [True, False, True]}]))
     file_statuses = list(file_statuses)
     assert len(file_statuses) == 1
-    assert file_statuses[0]["vis"] == "▇▁▇"
+    assert file_statuses[0]["vis"] == "█░█"
 
 
 def test_parse_pps_multi_files():
@@ -16,8 +16,8 @@ def test_parse_pps_multi_files():
     ]))
     file_statuses = list(file_statuses)
     assert len(file_statuses) == 2
-    assert file_statuses[0]["vis"] == "▇▁▇"
-    assert file_statuses[1]["vis"] == "▁▇▇"
+    assert file_statuses[0]["vis"] == "█░█"
+    assert file_statuses[1]["vis"] == "░██"
 
 
 def test_sizeof_fmt():
