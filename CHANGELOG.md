@@ -1,3 +1,5 @@
+# 0.6.1 - 2025-04-21
+* Add number of cached pages to the output
 # 0.6.0 - 2022-12-12
 * Support listing all sytles available
 * Change the order of styles

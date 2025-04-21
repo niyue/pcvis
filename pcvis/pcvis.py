@@ -230,6 +230,7 @@ def main(args, out=sys.stdout):
                 formatted_attrs = [
                     ("size", sizeof_fmt(file_status['size'])),
                     ("pages", file_status["pages"]),
+                    ("cached", file_status["cached"]),
                     ("percent", f"{file_status['percent']}%"),
                 ]
                 colorized_attrs = colorize_list(formatted_attrs)
